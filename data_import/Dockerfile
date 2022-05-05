@@ -8,7 +8,7 @@ COPY run.sh /app/DataImport.Web/run.sh
 
 COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-RUN apk add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgresql-client=~13.6 jq=~1.6 icu=~67.1 gcompat tzdata  && \
+RUN apk add unzip dos2unix bash gettext postgresql-client jq icu gcompat tzdata  && \
     wget -O /app/DataImport.zip  https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/DataImport.Web/versions/${VERSION}/content && \
     unzip /app/DataImport.zip -d /app/DataImport.Web && \
     rm -f /app/DataImport.zip && \
