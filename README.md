@@ -4,12 +4,11 @@
 gcloud config set project <walkthrough-project-id/>;
 
 bash data_import/init.sh;
-sudo chmod -R 664 *;
 
 gcloud builds submit --tag gcr.io/data-import-sandbox/edfi-data-import data_import/;
 
 gcloud beta run deploy edfi-data-import \
-    --image gcr.io/data-import-sandbox>/edfi-data-import \
+    --image gcr.io/data-import-sandbox/edfi-data-import \
     --add-cloudsql-instances data-import-sandbox:us-central1:edfi-ods-db \
     --port 80 \
     --region us-central1 \

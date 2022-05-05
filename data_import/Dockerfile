@@ -1,5 +1,8 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 
+ENV DOTNET_VERSION=6.0.3
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 ENV VERSION="1.3.0"
 
 WORKDIR /app
