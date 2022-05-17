@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 
 ENV DOTNET_VERSION=6.0.3
 ENV DOTNET_RUNNING_IN_CONTAINER=true
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 ENV VERSION="1.3.0"
 
 WORKDIR /app
@@ -11,7 +10,7 @@ COPY run.sh /app/DataImport.Web/run.sh
 
 COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-RUN apk add unzip dos2unix bash gettext postgresql-client jq icu gcompat tzdata  && \
+RUN apk add unzip dos2unix bash gettext postgresql-client jq icu gcompat tzdata ca-certificates krb5-libs libgcc libintl libssl1.1 libstdc++ zlib  && \
     wget -O /app/DataImport.zip  https://pkgs.dev.azure.com/ed-fi-alliance/Ed-Fi-Alliance-OSS/_apis/packaging/feeds/EdFi/nuget/packages/DataImport.Web/versions/${VERSION}/content && \
     unzip /app/DataImport.zip -d /app/DataImport.Web && \
     rm -f /app/DataImport.zip && \
