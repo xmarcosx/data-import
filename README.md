@@ -1,15 +1,23 @@
 # Data Import in Google Cloud
 
 ```sh
-gcloud config set project <walkthrough-project-id/>;
+gcloud config set project $GOOGLE_CLOUD_PROJECT;
 
-bash data_import/init.sh;
+gcloud services enable artifactregistry.googleapis.com;
 
-gcloud builds submit --tag gcr.io/data-import-sandbox/edfi-data-import data_import/;
+# create artifact registry repository
+gcloud artifacts repositories create dataimport \
+    --project=$GOOGLE_CLOUD_PROJECT \
+    --repository-format=docker \
+    --location=us-central1 \
+    --description="Docker repository";
+
+gcloud builds submit \
+    --tag us-central1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/dataimport/dataimport data_import/.;
 
 gcloud beta run deploy edfi-data-import \
-    --image gcr.io/data-import-sandbox/edfi-data-import \
-    --add-cloudsql-instances data-import-sandbox:us-central1:edfi-ods-db \
+    --image us-central1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/dataimport/dataimport \
+    --add-cloudsql-instances "$GOOGLE_CLOUD_PROJECT":us-central1:edfi-ods-db \
     --port 80 \
     --region us-central1 \
     --cpu 2 \
@@ -18,9 +26,9 @@ gcloud beta run deploy edfi-data-import \
     --min-instances 0 \
     --max-instances 1 \
     --allow-unauthenticated \
-    --update-env-vars PROJECT_ID=data-import-sandbox,API_URL=$(gcloud beta run services describe edfi-api --region us-central1 --format="get(status.url)") \
-    --set-secrets=DB_PASS=ods-password:1,ENCRYPTION_KEY=admin-app-encryption-key:1 \
-    --service-account edfi-cloud-run@data-import-sandbox.iam.gserviceaccount.com \
+    --update-env-vars PROJECT_ID="$GOOGLE_CLOUD_PROJECT",API_URL=$(gcloud beta run services describe edfi-api --region us-central1 --format="get(status.url)") \
+    --set-secrets=DB_PASS=ods-password:latest,ENCRYPTION_KEY=admin-app-encryption-key:latest \
+    --service-account edfi-cloud-run@"$GOOGLE_CLOUD_PROJECT".iam.gserviceaccount.com \
     --platform managed;
 
 ```
