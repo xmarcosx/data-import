@@ -3,9 +3,9 @@
 ```sh
 gcloud config set project $GOOGLE_CLOUD_PROJECT;
 
-gcloud services enable artifactregistry.googleapis.com;
-
 gcloud sql databases create 'EdFi_DataImport' --instance=edfi-ods-db;
+
+gcloud services enable artifactregistry.googleapis.com;
 
 # create artifact registry repository
 gcloud artifacts repositories create dataimport \
