@@ -22,9 +22,12 @@ RUN apk --no-cache add unzip=~6.0 dos2unix=~7.4 bash=~5.1 gettext=~0.21 postgres
     unzip /app/DataImportTransformLoad.zip -d /app/DataImport.Server.TransformLoad && \
     chmod 755 /app/DataImport.Server.TransformLoad/DataImport.Server.TransformLoad -- ** && \   
     rm -f /app/DataImport.zip && \
-    rm -f /app/DataImportTransformLoad.zip 
+    rm -f /app/DataImportTransformLoad.zip && \
+    rm /app/DataImport.Web/appsettings.json
 
-COPY Compose/pgsql/run.sh /app/DataImport.Web/run.sh
+COPY appsettings.template.json /app/DataImport.Web/appsettings.template.json
+COPY run.sh /app/DataImport.Web/run.sh
+
 RUN dos2unix /app/DataImport.Web/*.json && \
     dos2unix /app/DataImport.Web/*.sh && \
     dos2unix /app/DataImport.Server.TransformLoad/*.json && \
@@ -33,4 +36,5 @@ RUN dos2unix /app/DataImport.Web/*.json && \
 EXPOSE 80
 
 WORKDIR /app/DataImport.Web
-ENTRYPOINT [ "/app/DataImport.Web/run.sh" ]
+
+ENTRYPOINT exec /app/DataImport.Web/run.sh
